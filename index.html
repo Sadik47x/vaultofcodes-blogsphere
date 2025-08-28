@@ -1,0 +1,3008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogSphere - Modern Blog Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Theme Variables */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #3b82f6;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #60a5fa;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .bg-primary { background-color: var(--bg-primary); }
+        .bg-secondary { background-color: var(--bg-secondary); }
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .border-custom { border-color: var(--border-color); }
+        .accent-color { color: var(--accent-color); }
+        
+        /* Typography Controls */
+        .typography-small { font-size: 14px; }
+        .typography-medium { font-size: 16px; }
+        .typography-large { font-size: 18px; }
+        .typography-xl { font-size: 20px; }
+        
+        .line-height-tight { line-height: 1.4; }
+        .line-height-normal { line-height: 1.6; }
+        .line-height-loose { line-height: 1.8; }
+        
+        .letter-spacing-tight { letter-spacing: -0.025em; }
+        .letter-spacing-normal { letter-spacing: 0; }
+        .letter-spacing-wide { letter-spacing: 0.025em; }
+        
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        /* Hero Section Theme Support */
+        .hero-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
+        }
+        
+        [data-theme="dark"] .hero-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+        
+        /* Accessibility */
+        .high-contrast {
+            filter: contrast(150%);
+        }
+        
+        .reduced-motion * {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+        
+        /* Modal Backdrop */
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Blog Card Hover Effect */
+        .blog-card {
+            transition: all 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Editor Styles */
+        .editor-content {
+            min-height: 400px;
+            outline: none;
+        }
+        
+        .editor-content:empty:before {
+            content: "Start writing your story...";
+            color: var(--text-secondary);
+        }
+        
+        /* Search Suggestions */
+        .search-suggestions {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* Category Pills */
+        .category-pill {
+            transition: all 0.2s ease;
+        }
+        
+        .category-pill:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .admin-panel.open {
+            transform: translateX(0);
+        }
+        
+        /* Google Sign-in Button */
+        .google-btn {
+            background: #4285f4;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 16px;
+            text-align: center;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        .google-btn:hover {
+            background: #357ae8;
+        }
+        
+        .google-btn:active {
+            background: #2d5aa0;
+        }
+        
+        /* Image Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent-color);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--accent-color);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Success Modal Animations */
+        .success-modal.show {
+            transform: scale(1);
+        }
+        
+        .success-icon {
+            animation: successBounce 0.6s ease-out;
+        }
+        
+        @keyframes successBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Bookmark Animation */
+        .bookmark-animation {
+            position: relative;
+        }
+        
+        .bookmark-pop {
+            animation: bookmarkPop 0.6s ease-out;
+        }
+        
+        @keyframes bookmarkPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .bookmark-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bookmarkParticle 1s ease-out forwards;
+        }
+        
+        @keyframes bookmarkParticle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .celebration-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            animation: celebrate 2s ease-out infinite;
+        }
+        
+        .celebration-particle:nth-child(1) {
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        
+        .celebration-particle:nth-child(2) {
+            top: 30%;
+            right: 20%;
+            animation-delay: 0.2s;
+            background: linear-gradient(45deg, #ec4899, #be185d);
+        }
+        
+        .celebration-particle:nth-child(3) {
+            bottom: 30%;
+            left: 30%;
+            animation-delay: 0.4s;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+        }
+        
+        .celebration-particle:nth-child(4) {
+            bottom: 20%;
+            right: 30%;
+            animation-delay: 0.6s;
+            background: linear-gradient(45deg, #10b981, #047857);
+        }
+        
+        .celebration-particle:nth-child(5) {
+            top: 50%;
+            left: 50%;
+            animation-delay: 0.8s;
+            background: linear-gradient(45deg, #8b5cf6, #5b21b6);
+        }
+        
+        @keyframes celebrate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light" class="bg-primary text-primary">
+    <!-- Navigation -->
+    <nav class="bg-primary border-b border-custom sticky top-0 z-50 relative">
+        <!-- Hover Scroll Indicator -->
+        <div id="hoverScrollIndicator" class="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out opacity-0 z-10" style="width: 0%;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <button onclick="toggleAdminPanel()" class="text-2xl font-bold font-display accent-color hover:opacity-80 transition-opacity" id="logoButton">
+                        BlogSphere
+                    </button>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-12">
+                    <button onclick="showPage('home')" class="nav-link text-primary hover:accent-color transition-colors font-medium" data-page="home">Home</button>
+                    <button onclick="showPage('feed')" class="nav-link text-secondary hover:accent-color transition-colors font-medium" data-page="feed">Feed</button>
+                    <button onclick="showPage('bookmarks')" class="nav-link text-secondary hover:accent-color transition-colors font-medium" data-page="bookmarks">Bookmarks</button>
+                    <button onclick="showPage('write')" class="nav-link text-secondary hover:accent-color transition-colors font-medium" data-page="write">Write</button>
+                    <button onclick="showPage('analytics')" class="nav-link text-secondary hover:accent-color transition-colors font-medium" data-page="analytics" id="analyticsNavBtn" style="display: none;">Analytics</button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-md mx-6 relative">
+                    <input type="text" id="searchInput" placeholder="Search blogs, authors, tags..." 
+                           class="w-full pl-10 pr-4 py-2 bg-secondary border border-custom rounded-lg text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           oninput="handleSearch(this.value)">
+                    <i class="fas fa-search absolute left-3 top-3 text-secondary"></i>
+                    
+                    <!-- Search Suggestions -->
+                    <div id="searchSuggestions" class="hidden absolute top-full left-0 right-0 mt-1 bg-primary border border-custom rounded-lg shadow-lg z-50 search-suggestions">
+                        <!-- Dynamic search results -->
+                    </div>
+                </div>
+                
+                <!-- Right Side Controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Typography Settings -->
+                    <div class="relative">
+                        <button onclick="toggleTypographyMenu()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                            <i class="fas fa-font text-secondary"></i>
+                        </button>
+                        
+                        <div id="typographyMenu" class="hidden absolute right-0 mt-2 w-64 bg-primary border border-custom rounded-lg shadow-lg z-50 p-4">
+                            <h3 class="font-semibold text-primary mb-3">Typography Settings</h3>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-secondary mb-1">Font Size</label>
+                                    <select id="fontSizeSelect" onchange="updateTypography()" class="w-full text-sm border border-custom rounded px-2 py-1 bg-primary text-primary">
+                                        <option value="small">Small</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="large">Large</option>
+                                        <option value="xl">Extra Large</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-secondary mb-1">Line Height</label>
+                                    <select id="lineHeightSelect" onchange="updateTypography()" class="w-full text-sm border border-custom rounded px-2 py-1 bg-primary text-primary">
+                                        <option value="tight">Tight</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="loose">Loose</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-secondary mb-1">Letter Spacing</label>
+                                    <select id="letterSpacingSelect" onchange="updateTypography()" class="w-full text-sm border border-custom rounded px-2 py-1 bg-primary text-primary">
+                                        <option value="tight">Tight</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="wide">Wide</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                        <i id="themeIcon" class="fas fa-moon text-secondary"></i>
+                    </button>
+                    
+                    <!-- Accessibility Menu -->
+                    <div class="relative">
+                        <button onclick="toggleAccessibilityMenu()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                            <i class="fas fa-universal-access text-secondary"></i>
+                        </button>
+                        
+                        <div id="accessibilityMenu" class="hidden absolute right-0 mt-2 w-64 bg-primary border border-custom rounded-lg shadow-lg z-50 p-4">
+                            <h3 class="font-semibold text-primary mb-3">Accessibility Options</h3>
+                            
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="highContrastToggle" onchange="toggleHighContrast()" class="rounded border-custom">
+                                    <span class="text-sm text-secondary">High Contrast Mode</span>
+                                </label>
+                                
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="reducedMotionToggle" onchange="toggleReducedMotion()" class="rounded border-custom">
+                                    <span class="text-sm text-secondary">Reduce Motion</span>
+                                </label>
+                                
+                                <button onclick="resetAccessibility()" class="w-full text-left text-sm accent-color hover:opacity-80 mt-2">
+                                    Reset to Defaults
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-secondary transition-colors">
+                            <i class="fas fa-user-circle text-2xl text-secondary"></i>
+                        </button>
+                        
+                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-primary border border-custom rounded-lg shadow-lg z-50">
+                            <div class="p-4 border-b border-custom">
+                                <p class="font-medium text-primary">Guest User</p>
+                                <p class="text-sm text-secondary">Not signed in</p>
+                            </div>
+                            <div class="py-2">
+                                <button onclick="showAuthModal('signin')" class="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors">
+                                    Sign In
+                                </button>
+                                <button onclick="showAuthModal('signup')" class="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors">
+                                    Sign Up
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors">
+                        <i class="fas fa-bars text-secondary"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-custom bg-primary">
+            <div class="px-4 py-3 space-y-2">
+                <button onclick="showPage('home')" class="block w-full text-left px-3 py-2 text-primary hover:bg-secondary rounded-md">Home</button>
+                <button onclick="showPage('feed')" class="block w-full text-left px-3 py-2 text-secondary hover:bg-secondary rounded-md">Feed</button>
+                <button onclick="showPage('bookmarks')" class="block w-full text-left px-3 py-2 text-secondary hover:bg-secondary rounded-md">Bookmarks</button>
+                <button onclick="showPage('write')" class="block w-full text-left px-3 py-2 text-secondary hover:bg-secondary rounded-md">Write</button>
+                <button onclick="showPage('analytics')" class="block w-full text-left px-3 py-2 text-secondary hover:bg-secondary rounded-md" id="mobileAnalyticsBtn" style="display: none;">Analytics</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel fixed left-0 top-0 h-full w-80 bg-primary border-r border-custom z-40 shadow-lg">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-primary">Admin Panel</h2>
+                <button onclick="toggleAdminPanel()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                    <i class="fas fa-times text-secondary"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-secondary rounded-lg p-4">
+                    <h3 class="font-semibold text-primary mb-2">Site Statistics</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Total Posts:</span>
+                            <span class="text-primary" id="totalPosts">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Total Users:</span>
+                            <span class="text-primary">1</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Total Views:</span>
+                            <span class="text-primary">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-secondary rounded-lg p-4">
+                    <h3 class="font-semibold text-primary mb-2">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <button onclick="showPage('write')" class="w-full text-left px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>New Post
+                        </button>
+                        <button onclick="clearAllPosts()" class="w-full text-left px-3 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            <i class="fas fa-trash mr-2"></i>Clear All Posts
+                        </button>
+                        <button onclick="showAdminLogin()" class="w-full text-left px-3 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" id="adminLoginBtn">
+                            <i class="fas fa-key mr-2"></i>Admin Login
+                        </button>
+                        <button onclick="adminLogout()" class="w-full text-left px-3 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors hidden" id="adminLogoutBtn">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Admin Logout
+                        </button>
+                        <button onclick="exportData()" class="w-full text-left px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-secondary rounded-lg p-4">
+                    <h3 class="font-semibold text-primary mb-2">Categories</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Technology:</span>
+                            <span class="text-primary" id="techCount">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Design:</span>
+                            <span class="text-primary" id="designCount">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Lifestyle:</span>
+                            <span class="text-primary" id="lifestyleCount">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-secondary">Business:</span>
+                            <span class="text-primary" id="businessCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        <!-- Home Page -->
+        <div id="homePage" class="page fade-in">
+            <!-- Hero Section -->
+            <section class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-20 hero-section">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-5xl md:text-6xl font-bold font-display text-primary mb-6">
+                        Share Your <span class="accent-color">Stories</span>
+                    </h1>
+                    <p class="text-xl text-secondary mb-8 max-w-3xl mx-auto">
+                        Create, share, and discover amazing stories from writers around the world. Join our community of passionate storytellers.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="showPage('write')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl">
+                            <i class="fas fa-pen mr-2"></i>Start Writing
+                        </button>
+                        <button onclick="showPage('feed')" class="border-2 border-primary text-primary hover:bg-secondary px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
+                            <i class="fas fa-compass mr-2"></i>Explore Blogs
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="py-20 bg-primary">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl font-bold font-display text-primary mb-4">Why Choose BlogSphere?</h2>
+                        <p class="text-xl text-secondary">Everything you need to create and share amazing content</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center p-8 bg-secondary rounded-xl hover:shadow-lg transition-all duration-300">
+                            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-edit text-3xl text-blue-600"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-primary mb-4">Rich Editor</h3>
+                            <p class="text-secondary text-lg">Powerful editor with formatting tools, image uploads, AI assistance, and real-time preview</p>
+                        </div>
+                        
+                        <div class="text-center p-8 bg-secondary rounded-xl hover:shadow-lg transition-all duration-300">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-users text-3xl text-green-600"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-primary mb-4">Community</h3>
+                            <p class="text-secondary text-lg">Connect with writers, engage through comments, and build your audience</p>
+                        </div>
+                        
+                        <div class="text-center p-8 bg-secondary rounded-xl hover:shadow-lg transition-all duration-300">
+                            <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-chart-line text-3xl text-purple-600"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-primary mb-4">Analytics</h3>
+                            <p class="text-secondary text-lg">Track performance, schedule content, and grow your blog with detailed insights</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trending & Recommendations -->
+            <section class="py-20 bg-primary">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <!-- Trending Now -->
+                    <div class="mb-16">
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-3xl font-bold font-display text-primary">🔥 Trending Now</h2>
+                            <button onclick="showPage('feed')" class="text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                        </div>
+                        
+                        <div id="trendingPosts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Trending posts will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Recommended for You -->
+                    <div>
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-3xl font-bold font-display text-primary">✨ Recommended for You</h2>
+                            <button onclick="showPage('feed')" class="text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                        </div>
+                        
+                        <div id="recommendedPosts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Recommended posts will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Empty State -->
+            <section id="emptyHomeState" class="py-20 bg-secondary hidden">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div class="bg-primary rounded-2xl p-12 shadow-lg">
+                        <i class="fas fa-blog text-6xl text-gray-300 mb-6"></i>
+                        <h3 class="text-2xl font-bold text-primary mb-4">No Blogs Yet</h3>
+                        <p class="text-secondary mb-8">Be the first to share your story with the world. Create your first blog post and start building your audience.</p>
+                        <button onclick="showPage('write')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Create Your First Post
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Newsletter Section -->
+            <section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Stay in the Loop</h2>
+                    <p class="text-xl text-blue-100 mb-8">Get the latest stories and insights delivered to your inbox weekly</p>
+                    
+                    <div class="max-w-md mx-auto">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="email" id="newsletterEmail" placeholder="Enter your email" 
+                                   class="flex-1 px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-white text-gray-900">
+                            <button onclick="subscribeNewsletter()" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                                Subscribe
+                            </button>
+                        </div>
+                        <p class="text-sm text-blue-100 mt-3">No spam, unsubscribe at any time</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        </div>
+
+        <!-- Bookmarks Page -->
+        <div id="bookmarksPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h1 class="text-3xl font-bold font-display text-primary">📚 My Bookmarks</h1>
+                    <div class="text-sm text-secondary">
+                        <span id="bookmarkCount">0</span> saved posts
+                    </div>
+                </div>
+                
+                <!-- Bookmarked Posts Container -->
+                <div id="bookmarksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Empty state -->
+                    <div id="emptyBookmarksState" class="col-span-full text-center py-20">
+                        <i class="fas fa-bookmark text-6xl text-gray-300 mb-6"></i>
+                        <h3 class="text-2xl font-bold text-primary mb-4">No Bookmarks Yet</h3>
+                        <p class="text-secondary mb-8">Save your favorite posts by clicking the bookmark icon on any blog post.</p>
+                        <button onclick="showPage('feed')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-compass mr-2"></i>Explore Posts
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feed Page -->
+        <div id="feedPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h1 class="text-3xl font-bold font-display text-primary">Latest Posts</h1>
+                    <div class="flex items-center space-x-4">
+                        <select id="sortSelect" onchange="sortPosts()" class="border border-custom rounded-lg px-4 py-2 bg-primary text-primary">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="title">By Title</option>
+                        </select>
+                        <select id="categoryFilter" onchange="filterByCategory()" class="border border-custom rounded-lg px-4 py-2 bg-primary text-primary">
+                            <option value="">All Categories</option>
+                            <option value="technology">Technology</option>
+                            <option value="design">Design</option>
+                            <option value="lifestyle">Lifestyle</option>
+                            <option value="business">Business</option>
+                            <option value="education">Education</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Blog Posts Container -->
+                <div id="blogContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Empty state -->
+                    <div id="emptyFeedState" class="col-span-full text-center py-20">
+                        <i class="fas fa-newspaper text-6xl text-gray-300 mb-6"></i>
+                        <h3 class="text-2xl font-bold text-primary mb-4">No Posts Yet</h3>
+                        <p class="text-secondary mb-8">There are no blog posts to display. Be the first to create one!</p>
+                        <button onclick="showPage('write')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Write First Post
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Write Page -->
+        <div id="writePage" class="page hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="bg-primary border border-custom rounded-2xl shadow-lg overflow-hidden">
+                    <!-- Editor Header -->
+                    <div class="border-b border-custom p-6">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-2xl font-bold text-primary">Create New Post</h1>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="previewPost()" class="text-secondary hover:text-primary transition-colors">
+                                    <i class="fas fa-eye mr-1"></i>Preview
+                                </button>
+                                <button onclick="saveDraft()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+                                    Save Draft
+                                </button>
+                                <button onclick="publishPost()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                                    Publish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Editor Content -->
+                    <div class="p-6">
+                        <!-- Title -->
+                        <input type="text" id="postTitle" placeholder="Enter your post title..." 
+                               class="w-full text-3xl font-bold border-none outline-none bg-transparent text-primary placeholder-text-secondary mb-6">
+                        
+                        <!-- Thumbnail Upload -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-secondary mb-2">Thumbnail Image</label>
+                            <div id="thumbnailUpload" class="upload-area rounded-lg p-8 text-center cursor-pointer">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-secondary mb-4"></i>
+                                <p class="text-secondary mb-2">Click to upload or drag and drop</p>
+                                <p class="text-sm text-secondary">PNG, JPG, GIF up to 5MB</p>
+                                <input type="file" id="thumbnailInput" accept="image/*" class="hidden" onchange="handleThumbnailUpload(event)">
+                            </div>
+                            <div id="thumbnailPreview" class="hidden mt-4">
+                                <img id="thumbnailImage" class="w-full h-48 object-cover rounded-lg">
+                                <button onclick="removeThumbnail()" class="mt-2 text-red-600 hover:text-red-700 text-sm">
+                                    <i class="fas fa-trash mr-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Selection -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-secondary mb-2">Category</label>
+                            <select id="postCategory" class="w-full border border-custom rounded-lg px-4 py-2 bg-primary text-primary">
+                                <option value="">Select a category</option>
+                                <option value="technology">Technology</option>
+                                <option value="design">Design</option>
+                                <option value="lifestyle">Lifestyle</option>
+                                <option value="business">Business</option>
+                                <option value="education">Education</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Editor Toolbar -->
+                        <div class="border border-custom rounded-t-lg p-3 bg-secondary">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2 flex-wrap gap-2">
+                                    <button onclick="formatText('bold')" class="p-2 rounded hover:bg-primary transition-colors" title="Bold">
+                                        <i class="fas fa-bold text-secondary"></i>
+                                    </button>
+                                    <button onclick="formatText('italic')" class="p-2 rounded hover:bg-primary transition-colors" title="Italic">
+                                        <i class="fas fa-italic text-secondary"></i>
+                                    </button>
+                                    <button onclick="formatText('underline')" class="p-2 rounded hover:bg-primary transition-colors" title="Underline">
+                                        <i class="fas fa-underline text-secondary"></i>
+                                    </button>
+                                    <div class="border-l border-custom h-6 mx-2"></div>
+                                    <button onclick="formatText('h1')" class="px-2 py-1 rounded hover:bg-primary transition-colors text-sm font-bold text-secondary">H1</button>
+                                    <button onclick="formatText('h2')" class="px-2 py-1 rounded hover:bg-primary transition-colors text-sm font-bold text-secondary">H2</button>
+                                    <button onclick="formatText('h3')" class="px-2 py-1 rounded hover:bg-primary transition-colors text-sm font-bold text-secondary">H3</button>
+                                    <div class="border-l border-custom h-6 mx-2"></div>
+                                    <button onclick="formatText('ul')" class="p-2 rounded hover:bg-primary transition-colors" title="Bullet List">
+                                        <i class="fas fa-list-ul text-secondary"></i>
+                                    </button>
+                                    <button onclick="formatText('ol')" class="p-2 rounded hover:bg-primary transition-colors" title="Numbered List">
+                                        <i class="fas fa-list-ol text-secondary"></i>
+                                    </button>
+                                    <button onclick="insertLink()" class="p-2 rounded hover:bg-primary transition-colors" title="Insert Link">
+                                        <i class="fas fa-link text-secondary"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- AI Assistant & Scheduler -->
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="toggleAIAssistant()" class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                                        <i class="fas fa-robot"></i>
+                                        <span>AI Assistant</span>
+                                    </button>
+                                    <button onclick="showScheduler()" class="flex items-center space-x-2 bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Schedule</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Content Editor -->
+                        <div id="contentEditor" contenteditable="true" 
+                             class="editor-content border border-custom border-t-0 rounded-b-lg p-6 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                             oninput="updateWordCount()">
+                        </div>
+                        
+                        <!-- AI Assistant Panel -->
+                        <div id="aiAssistantPanel" class="hidden border border-custom rounded-lg p-4 mt-4 bg-purple-50">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-semibold text-purple-800 flex items-center">
+                                    <i class="fas fa-robot mr-2"></i>AI Writing Assistant
+                                </h3>
+                                <button onclick="toggleAIAssistant()" class="text-purple-600 hover:text-purple-800">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="aiSuggestTitle()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        Suggest Title
+                                    </button>
+                                    <button onclick="aiImproveContent()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        Improve Writing
+                                    </button>
+                                    <button onclick="aiCheckGrammar()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        Check Grammar
+                                    </button>
+                                    <button onclick="aiGenerateOutline()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        Generate Outline
+                                    </button>
+                                </div>
+                                
+                                <div id="aiSuggestions" class="bg-white border border-purple-200 rounded-lg p-3 text-sm text-gray-700 hidden">
+                                    <!-- AI suggestions will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Word Count -->
+                        <div class="flex items-center justify-between mt-2 text-sm text-secondary">
+                            <span id="wordCount">0 words</span>
+                            <span id="readingTime">0 min read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div id="analyticsPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <h1 class="text-3xl font-bold font-display text-primary mb-8">Analytics Dashboard</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Stats Cards -->
+                    <div class="bg-primary border border-custom rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-secondary">Total Posts</p>
+                                <p class="text-2xl font-bold text-primary" id="analyticsPostCount">0</p>
+                            </div>
+                            <i class="fas fa-file-alt text-2xl text-blue-500"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-primary border border-custom rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-secondary">Total Views</p>
+                                <p class="text-2xl font-bold text-primary" id="analyticsTotalViews">0</p>
+                            </div>
+                            <i class="fas fa-eye text-2xl text-green-500"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-primary border border-custom rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-secondary">Total Likes</p>
+                                <p class="text-2xl font-bold text-primary">0</p>
+                            </div>
+                            <i class="fas fa-heart text-2xl text-red-500"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-primary border border-custom rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-secondary">Avg. Reading Time</p>
+                                <p class="text-2xl font-bold text-primary">0 min</p>
+                            </div>
+                            <i class="fas fa-clock text-2xl text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Posts -->
+                <div class="bg-primary border border-custom rounded-lg p-6">
+                    <h2 class="text-xl font-bold text-primary mb-4">Recent Posts</h2>
+                    <div id="recentPostsList">
+                        <div class="text-center py-8">
+                            <i class="fas fa-chart-bar text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-secondary">No posts to analyze yet. Create your first post to see analytics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-2xl font-bold font-display mb-4">BlogSphere</h3>
+                    <p class="text-gray-300 mb-6 max-w-md">
+                        Create, share, and discover amazing stories from writers around the world. Join our community of passionate storytellers.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><button onclick="showPage('home')" class="text-gray-300 hover:text-white transition-colors">Home</button></li>
+                        <li><button onclick="showPage('feed')" class="text-gray-300 hover:text-white transition-colors">Browse Posts</button></li>
+                        <li><button onclick="showPage('write')" class="text-gray-300 hover:text-white transition-colors">Write</button></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Categories -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Technology</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Design</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Lifestyle</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Business</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 BlogSphere. Made by Sadik with ❤️
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-primary border border-custom rounded-2xl shadow-xl max-w-md w-full">
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-2xl text-purple-600"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-primary mb-2">Admin Access</h2>
+                    <p class="text-secondary">Enter admin credentials to access analytics</p>
+                </div>
+                
+                <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-secondary mb-1">Username</label>
+                            <input type="text" id="adminUsername" required class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-secondary mb-1">Password</label>
+                            <input type="password" id="adminPassword" required class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                            Login as Admin
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-6 text-center text-sm text-secondary">
+                    <p>Default credentials: admin / admin123</p>
+                </div>
+                
+                <button onclick="closeAdminLoginModal()" class="absolute top-4 right-4 p-2 rounded-lg hover:bg-secondary transition-colors">
+                    <i class="fas fa-times text-secondary"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-primary border border-custom rounded-2xl shadow-xl max-w-md w-full">
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <h2 id="authTitle" class="text-2xl font-bold text-primary mb-2">Sign In</h2>
+                    <p class="text-secondary">Welcome back to BlogSphere</p>
+                </div>
+                
+                <form id="authForm" onsubmit="handleAuth(event)">
+                    <div class="space-y-4">
+                        <div id="nameField" class="hidden">
+                            <label class="block text-sm font-medium text-secondary mb-1">Full Name</label>
+                            <input type="text" id="fullName" class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-secondary mb-1">Email</label>
+                            <input type="email" id="email" required class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-secondary mb-1">Password</label>
+                            <input type="password" id="password" required class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                            <span id="authButtonText">Sign In</span>
+                        </button>
+                        
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-custom"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-primary text-secondary">Or continue with</span>
+                            </div>
+                        </div>
+                        
+                        <button type="button" onclick="signInWithGoogle()" class="google-btn">
+                            <i class="fab fa-google mr-2"></i>
+                            <span id="googleButtonText">Sign in with Google</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-secondary">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button onclick="switchAuthMode()" class="accent-color hover:opacity-80 font-medium ml-1" id="authSwitchButton">Sign up</button>
+                    </p>
+                </div>
+                
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 p-2 rounded-lg hover:bg-secondary transition-colors">
+                    <i class="fas fa-times text-secondary"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-primary border border-custom rounded-3xl shadow-2xl max-w-lg w-full transform transition-all duration-300 scale-95 success-modal">
+            <div class="p-8 text-center relative overflow-hidden">
+                <!-- Celebration Animation Background -->
+                <div class="absolute inset-0 pointer-events-none">
+                    <div class="celebration-particle"></div>
+                    <div class="celebration-particle"></div>
+                    <div class="celebration-particle"></div>
+                    <div class="celebration-particle"></div>
+                    <div class="celebration-particle"></div>
+                </div>
+                
+                <!-- Success Icon with Animation -->
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 success-icon">
+                        <i class="fas fa-check text-3xl text-white"></i>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-primary mb-2 font-display">🎉 Awesome!</h2>
+                        <p id="successMessage" class="text-lg text-secondary">Yeah! You created this blog successfully!</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4 mb-6 border border-blue-100">
+                        <div class="flex items-center justify-center space-x-4 text-sm">
+                            <div class="flex items-center text-green-600">
+                                <i class="fas fa-rocket mr-2"></i>
+                                <span>Published</span>
+                            </div>
+                            <div class="w-1 h-1 bg-gray-300 rounded-full"></div>
+                            <div class="flex items-center text-blue-600">
+                                <i class="fas fa-eye mr-2"></i>
+                                <span>Ready to View</span>
+                            </div>
+                            <div class="w-1 h-1 bg-gray-300 rounded-full"></div>
+                            <div class="flex items-center text-purple-600">
+                                <i class="fas fa-share mr-2"></i>
+                                <span>Ready to Share</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button onclick="closeSuccessModal()" class="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium">
+                            <i class="fas fa-times mr-2"></i>Close
+                        </button>
+                        <button onclick="viewCreatedPost()" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl">
+                            <i class="fas fa-eye mr-2"></i>View Post
+                        </button>
+                    </div>
+                    
+                    <p class="text-xs text-secondary mt-4">
+                        <i class="fas fa-lightbulb mr-1"></i>
+                        Tip: Share your post on social media to reach more readers!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-primary border border-custom rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-primary">Preview Post</h2>
+                    <button onclick="closePreviewModal()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                        <i class="fas fa-times text-secondary"></i>
+                    </button>
+                </div>
+                
+                <div id="previewContent" class="prose max-w-none">
+                    <!-- Preview content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Scheduler Modal -->
+    <div id="schedulerModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-primary border border-custom rounded-2xl shadow-xl max-w-md w-full">
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-alt text-2xl text-orange-600"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-primary mb-2">Schedule Post</h2>
+                    <p class="text-secondary">Choose when to publish your content</p>
+                </div>
+                
+                <form id="schedulerForm" onsubmit="schedulePost(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-secondary mb-1">Publish Date</label>
+                            <input type="date" id="scheduleDate" required class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-secondary mb-1">Publish Time</label>
+                            <input type="time" id="scheduleTime" required class="w-full border border-custom rounded-lg px-4 py-3 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-blue-800 mb-1">Schedule Your Post</h4>
+                                    <p class="text-sm text-blue-700">Choose the perfect time to publish your content for maximum engagement with your audience.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3">
+                            <button type="button" onclick="closeScheduler()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                                Schedule Post
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <button onclick="closeScheduler()" class="absolute top-4 right-4 p-2 rounded-lg hover:bg-secondary transition-colors">
+                    <i class="fas fa-times text-secondary"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Detail Modal -->
+    <div id="blogDetailModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-primary border border-custom rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="closeBlogDetail()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                            <i class="fas fa-arrow-left text-secondary"></i>
+                        </button>
+                        <h2 class="text-2xl font-bold text-primary">Blog Post</h2>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="blogDetailBookmark" onclick="toggleBookmark(currentBlogPost.id, this)" class="bookmark-animation bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-bookmark mr-2"></i><span>Bookmark</span>
+                        </button>
+                        <button onclick="toggleShareMenu()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-share-alt mr-2"></i>Share
+                        </button>
+                        <button onclick="closeBlogDetail()" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                            <i class="fas fa-times text-secondary"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Share Menu -->
+                <div id="shareMenu" class="hidden mb-6 bg-secondary rounded-lg p-4">
+                    <h3 class="font-semibold text-primary mb-3">Share this post</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="shareToFacebook()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </button>
+                        <button onclick="shareToTwitter()" class="flex items-center space-x-2 bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </button>
+                        <button onclick="shareToLinkedIn()" class="flex items-center space-x-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                            <span>LinkedIn</span>
+                        </button>
+                        <button onclick="shareToWhatsApp()" class="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                        <button onclick="shareToInstagram()" class="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </button>
+                        <button onclick="copyLink()" class="flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-link"></i>
+                            <span>Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="blogDetailContent" class="prose max-w-none">
+                    <!-- Blog detail content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentTheme = 'light';
+        let currentPage = 'home';
+        let blogPosts = JSON.parse(localStorage.getItem('blogPosts')) || [];
+        let bookmarkedPosts = JSON.parse(localStorage.getItem('bookmarkedPosts')) || [];
+        let comments = JSON.parse(localStorage.getItem('comments')) || {};
+        let isAuthenticated = false;
+        let currentUser = null;
+        let authMode = 'signin';
+        let isAdmin = false;
+        let currentBlogPost = null;
+        
+        // Admin credentials
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'admin123'
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            updateBlogStats();
+            renderBlogPosts();
+            updateAnalytics();
+            loadAdminState();
+            updateHomePage();
+            updateBookmarksPage();
+            
+            // Setup drag and drop for thumbnail
+            setupThumbnailUpload();
+            
+            // Setup hover scroll indicator
+            setupHoverScrollIndicator();
+        });
+
+        // Bookmark System
+        function isBookmarked(postId) {
+            return bookmarkedPosts.includes(postId);
+        }
+
+        function toggleBookmark(postId, buttonElement) {
+            const wasBookmarked = isBookmarked(postId);
+            
+            if (wasBookmarked) {
+                bookmarkedPosts = bookmarkedPosts.filter(id => id !== postId);
+                showToast('Removed from bookmarks', 'info');
+            } else {
+                bookmarkedPosts.push(postId);
+                showToast('Added to bookmarks', 'success');
+                
+                // Create bookmark animation
+                if (buttonElement) {
+                    createBookmarkAnimation(buttonElement);
+                }
+            }
+            
+            localStorage.setItem('bookmarkedPosts', JSON.stringify(bookmarkedPosts));
+            
+            // Update all bookmark buttons for this post
+            updateAllBookmarkButtons(postId);
+            
+            // Update pages
+            renderBlogPosts();
+            updateBookmarksPage();
+            updateHomePage();
+            
+            // Update blog detail if open
+            if (currentBlogPost && currentBlogPost.id === postId) {
+                updateBlogDetailBookmark();
+            }
+        }
+
+        function updateAllBookmarkButtons(postId) {
+            const isCurrentlyBookmarked = isBookmarked(postId);
+            const bookmarkButtons = document.querySelectorAll(`[data-bookmark-id="${postId}"]`);
+            
+            bookmarkButtons.forEach(button => {
+                const icon = button.querySelector('i');
+                if (icon) {
+                    if (isCurrentlyBookmarked) {
+                        icon.className = 'fas fa-bookmark text-yellow-500';
+                        button.title = 'Remove from bookmarks';
+                    } else {
+                        icon.className = 'far fa-bookmark text-gray-500';
+                        button.title = 'Add to bookmarks';
+                    }
+                }
+            });
+        }
+
+        function createBookmarkAnimation(buttonElement) {
+            // Add pop animation to bookmark icon
+            const icon = buttonElement.querySelector('i');
+            icon.classList.add('bookmark-pop');
+            
+            // Create particles
+            const colors = ['#fbbf24', '#f59e0b', '#ec4899', '#be185d', '#3b82f6', '#1d4ed8'];
+            
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bookmark-particle';
+                particle.style.backgroundColor = colors[i];
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.setProperty('--dx', `${(Math.random() - 0.5) * 60}px`);
+                particle.style.setProperty('--dy', `${(Math.random() - 0.5) * 60}px`);
+                
+                buttonElement.style.position = 'relative';
+                buttonElement.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 1000);
+            }
+            
+            // Remove pop animation class
+            setTimeout(() => {
+                icon.classList.remove('bookmark-pop');
+            }, 600);
+        }
+
+        function updateBlogDetailBookmark() {
+            const bookmarkBtn = document.getElementById('blogDetailBookmark');
+            if (bookmarkBtn && currentBlogPost) {
+                const isBookmarkedNow = isBookmarked(currentBlogPost.id);
+                const icon = bookmarkBtn.querySelector('i');
+                const span = bookmarkBtn.querySelector('span');
+                
+                if (isBookmarkedNow) {
+                    icon.className = 'fas fa-bookmark text-yellow-500 mr-2';
+                    span.textContent = 'Bookmarked';
+                    bookmarkBtn.className = 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-2 rounded-lg transition-colors';
+                    bookmarkBtn.title = 'Remove from bookmarks';
+                } else {
+                    icon.className = 'far fa-bookmark text-gray-500 mr-2';
+                    span.textContent = 'Bookmark';
+                    bookmarkBtn.className = 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors';
+                    bookmarkBtn.title = 'Add to bookmarks';
+                }
+            }
+        }
+
+        function updateBookmarksPage() {
+            const container = document.getElementById('bookmarksContainer');
+            const emptyState = document.getElementById('emptyBookmarksState');
+            const bookmarkCount = document.getElementById('bookmarkCount');
+            
+            const bookmarkedPostsData = blogPosts.filter(post => bookmarkedPosts.includes(post.id));
+            
+            bookmarkCount.textContent = bookmarkedPostsData.length;
+            
+            if (bookmarkedPostsData.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            container.innerHTML = bookmarkedPostsData.map(post => `
+                <article class="blog-card bg-primary border border-custom rounded-lg overflow-hidden shadow-lg cursor-pointer" data-post-id="${post.id}" onclick="openBlogDetail('${post.id}')">
+                    ${post.thumbnail ? `
+                        <img src="${post.thumbnail}" alt="${post.title}" class="w-full h-48 object-cover">
+                    ` : `
+                        <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-white opacity-50"></i>
+                        </div>
+                    `}
+                    
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="category-pill bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${post.category}</span>
+                            <span class="text-sm text-secondary">${formatDate(post.createdAt)}</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-primary mb-3 hover:accent-color transition-colors">${post.title}</h3>
+                        <p class="text-secondary mb-4 line-clamp-3">${post.excerpt}</p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-secondary">
+                                <span><i class="fas fa-clock mr-1"></i>${post.readingTime} min read</span>
+                                <span><i class="fas fa-eye mr-1"></i>${post.views || 0} views</span>
+                            </div>
+                            <div class="flex items-center space-x-2" onclick="event.stopPropagation()">
+                                <button onclick="toggleBookmark('${post.id}', this)" data-bookmark-id="${post.id}" class="bookmark-animation p-2 rounded-lg hover:bg-secondary transition-colors" title="Remove from bookmarks">
+                                    <i class="fas fa-bookmark text-yellow-500 text-lg"></i>
+                                </button>
+                                <button onclick="editPost('${post.id}')" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                                    <i class="fas fa-edit text-secondary"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Load admin state from localStorage
+        function loadAdminState() {
+            const savedAdminState = localStorage.getItem('isAdmin');
+            if (savedAdminState === 'true') {
+                isAdmin = true;
+                updateAdminUI();
+            }
+        }
+
+        // Theme Management
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', currentTheme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            themeIcon.className = currentTheme === 'light' ? 'fas fa-moon text-secondary' : 'fas fa-sun text-secondary';
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            currentTheme = savedTheme;
+            document.body.setAttribute('data-theme', currentTheme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            themeIcon.className = currentTheme === 'light' ? 'fas fa-moon text-secondary' : 'fas fa-sun text-secondary';
+        }
+
+        // Page Navigation
+        function showPage(pageName) {
+            // Check if trying to access analytics without admin privileges
+            if (pageName === 'analytics' && !isAdmin) {
+                showToast('Admin access required for analytics', 'error');
+                return;
+            }
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            document.getElementById(pageName + 'Page').classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('accent-color');
+                link.classList.add('text-secondary');
+            });
+            
+            const activeLink = document.querySelector(`[data-page="${pageName}"]`);
+            if (activeLink) {
+                activeLink.classList.add('accent-color');
+                activeLink.classList.remove('text-secondary');
+            }
+            
+            currentPage = pageName;
+            
+            // Close mobile menu
+            document.getElementById('mobileMenu').classList.add('hidden');
+            
+            // Update page-specific content
+            if (pageName === 'analytics') {
+                updateAnalytics();
+            } else if (pageName === 'bookmarks') {
+                updateBookmarksPage();
+            }
+        }
+
+        // AI Writing Assistant
+        function toggleAIAssistant() {
+            const panel = document.getElementById('aiAssistantPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        function aiSuggestTitle() {
+            const suggestions = document.getElementById('aiSuggestions');
+            const category = document.getElementById('postCategory').value;
+            
+            const titleSuggestions = [
+                "10 Essential Tips for Modern Web Development",
+                "The Future of Digital Innovation: What's Next?",
+                "Mastering the Art of Creative Problem Solving",
+                "Building Better User Experiences in 2024",
+                "The Complete Guide to Professional Growth"
+            ];
+            
+            const randomSuggestion = titleSuggestions[Math.floor(Math.random() * titleSuggestions.length)];
+            
+            suggestions.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-lightbulb text-purple-600 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-purple-800 mb-2">Title Suggestion</h4>
+                        <p class="mb-3">"${randomSuggestion}"</p>
+                        <button onclick="applyTitleSuggestion('${randomSuggestion}')" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm">
+                            Use This Title
+                        </button>
+                    </div>
+                </div>
+            `;
+            suggestions.classList.remove('hidden');
+        }
+
+        function applyTitleSuggestion(title) {
+            document.getElementById('postTitle').value = title;
+            document.getElementById('aiSuggestions').classList.add('hidden');
+            showToast('Title applied successfully!', 'success');
+        }
+
+        function aiImproveContent() {
+            const suggestions = document.getElementById('aiSuggestions');
+            
+            suggestions.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-magic text-purple-600 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-purple-800 mb-2">Writing Improvements</h4>
+                        <ul class="space-y-1 text-sm">
+                            <li>• Consider adding more specific examples</li>
+                            <li>• Use active voice for stronger impact</li>
+                            <li>• Break long paragraphs into shorter ones</li>
+                            <li>• Add transition words for better flow</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            suggestions.classList.remove('hidden');
+        }
+
+        function aiCheckGrammar() {
+            const suggestions = document.getElementById('aiSuggestions');
+            
+            suggestions.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-check-circle text-green-600 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-green-800 mb-2">Grammar Check</h4>
+                        <p class="text-green-700">Great job! No grammar issues detected. Your writing looks clean and professional.</p>
+                    </div>
+                </div>
+            `;
+            suggestions.classList.remove('hidden');
+        }
+
+        function aiGenerateOutline() {
+            const suggestions = document.getElementById('aiSuggestions');
+            const title = document.getElementById('postTitle').value;
+            
+            suggestions.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-list text-purple-600 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-purple-800 mb-2">Suggested Outline</h4>
+                        <ol class="space-y-1 text-sm list-decimal list-inside">
+                            <li>Introduction - Hook your readers</li>
+                            <li>Main Point 1 - Core concept</li>
+                            <li>Main Point 2 - Supporting evidence</li>
+                            <li>Main Point 3 - Practical examples</li>
+                            <li>Conclusion - Call to action</li>
+                        </ol>
+                        <button onclick="applyOutline()" class="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm">
+                            Apply Outline
+                        </button>
+                    </div>
+                </div>
+            `;
+            suggestions.classList.remove('hidden');
+        }
+
+        function applyOutline() {
+            const editor = document.getElementById('contentEditor');
+            const outline = `
+                <h2>Introduction</h2>
+                <p>Start with an engaging hook...</p>
+                
+                <h2>Main Point 1</h2>
+                <p>Explain your core concept...</p>
+                
+                <h2>Main Point 2</h2>
+                <p>Provide supporting evidence...</p>
+                
+                <h2>Main Point 3</h2>
+                <p>Share practical examples...</p>
+                
+                <h2>Conclusion</h2>
+                <p>Summarize and include a call to action...</p>
+            `;
+            
+            editor.innerHTML = outline;
+            updateWordCount();
+            document.getElementById('aiSuggestions').classList.add('hidden');
+            showToast('Outline applied successfully!', 'success');
+        }
+
+        // Content Scheduler
+        function showScheduler() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('contentEditor').innerHTML.trim();
+            
+            if (!title || !content || content === '<br>') {
+                showToast('Please add title and content before scheduling', 'error');
+                return;
+            }
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('scheduleDate').min = today;
+            document.getElementById('scheduleDate').value = today;
+            
+            document.getElementById('schedulerModal').classList.remove('hidden');
+        }
+
+        function closeScheduler() {
+            document.getElementById('schedulerModal').classList.add('hidden');
+            document.getElementById('schedulerForm').reset();
+        }
+
+        function schedulePost(event) {
+            event.preventDefault();
+            
+            const date = document.getElementById('scheduleDate').value;
+            const time = document.getElementById('scheduleTime').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('contentEditor').innerHTML.trim();
+            const category = document.getElementById('postCategory').value;
+            
+            if (!title || !content || content === '<br>' || !category) {
+                showToast('Please complete your post before scheduling', 'error');
+                return;
+            }
+            
+            const scheduledDateTime = new Date(`${date}T${time}`);
+            const now = new Date();
+            
+            if (scheduledDateTime <= now) {
+                showToast('Please select a future date and time', 'error');
+                return;
+            }
+            
+            // Save as scheduled post (in a real app, this would be handled by a backend)
+            const words = content.replace(/<[^>]*>/g, '').trim().split(/\s+/).filter(word => word.length > 0).length;
+            const readingTime = Math.max(1, Math.ceil(words / 200));
+            const excerpt = content.replace(/<[^>]*>/g, '').substring(0, 150) + '...';
+            
+            const scheduledPost = {
+                id: Date.now().toString(),
+                title,
+                content,
+                category,
+                thumbnail: window.currentThumbnail || null,
+                excerpt,
+                readingTime,
+                views: 0,
+                scheduledFor: scheduledDateTime.toISOString(),
+                createdAt: new Date().toISOString(),
+                status: 'scheduled'
+            };
+            
+            // Store scheduled posts separately
+            let scheduledPosts = JSON.parse(localStorage.getItem('scheduledPosts')) || [];
+            scheduledPosts.push(scheduledPost);
+            localStorage.setItem('scheduledPosts', JSON.stringify(scheduledPosts));
+            
+            showToast(`Post scheduled for ${scheduledDateTime.toLocaleDateString()} at ${scheduledDateTime.toLocaleTimeString()}`, 'success');
+            
+            // Clear editor
+            document.getElementById('postTitle').value = '';
+            document.getElementById('contentEditor').innerHTML = '';
+            document.getElementById('postCategory').value = '';
+            removeThumbnail();
+            updateWordCount();
+            
+            closeScheduler();
+        }
+
+        // Admin Functions
+        function showAdminLogin() {
+            document.getElementById('adminLoginModal').classList.remove('hidden');
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+            document.getElementById('adminLoginForm').reset();
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                isAdmin = true;
+                localStorage.setItem('isAdmin', 'true');
+                updateAdminUI();
+                closeAdminLoginModal();
+                showToast('Admin login successful!', 'success');
+            } else {
+                showToast('Invalid admin credentials', 'error');
+            }
+        }
+
+        function adminLogout() {
+            isAdmin = false;
+            localStorage.removeItem('isAdmin');
+            updateAdminUI();
+            if (currentPage === 'analytics') {
+                showPage('home');
+            }
+            showToast('Admin logged out', 'success');
+        }
+
+        function updateAdminUI() {
+            const analyticsNavBtn = document.getElementById('analyticsNavBtn');
+            const mobileAnalyticsBtn = document.getElementById('mobileAnalyticsBtn');
+            const adminLoginBtn = document.getElementById('adminLoginBtn');
+            const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+            
+            if (isAdmin) {
+                analyticsNavBtn.style.display = 'block';
+                mobileAnalyticsBtn.style.display = 'block';
+                adminLoginBtn.classList.add('hidden');
+                adminLogoutBtn.classList.remove('hidden');
+            } else {
+                analyticsNavBtn.style.display = 'none';
+                mobileAnalyticsBtn.style.display = 'none';
+                adminLoginBtn.classList.remove('hidden');
+                adminLogoutBtn.classList.add('hidden');
+            }
+        }
+
+        // Typography Controls
+        function toggleTypographyMenu() {
+            const menu = document.getElementById('typographyMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function updateTypography() {
+            const fontSize = document.getElementById('fontSizeSelect').value;
+            const lineHeight = document.getElementById('lineHeightSelect').value;
+            const letterSpacing = document.getElementById('letterSpacingSelect').value;
+            
+            document.body.className = document.body.className.replace(/typography-\w+/g, '');
+            document.body.className = document.body.className.replace(/line-height-\w+/g, '');
+            document.body.className = document.body.className.replace(/letter-spacing-\w+/g, '');
+            
+            document.body.classList.add(`typography-${fontSize}`);
+            document.body.classList.add(`line-height-${lineHeight}`);
+            document.body.classList.add(`letter-spacing-${letterSpacing}`);
+        }
+
+        // Accessibility
+        function toggleAccessibilityMenu() {
+            const menu = document.getElementById('accessibilityMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+        }
+
+        function toggleReducedMotion() {
+            document.body.classList.toggle('reduced-motion');
+        }
+
+        function resetAccessibility() {
+            document.body.classList.remove('high-contrast', 'reduced-motion');
+            document.getElementById('highContrastToggle').checked = false;
+            document.getElementById('reducedMotionToggle').checked = false;
+        }
+
+        // User Menu
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Admin Panel
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('open');
+        }
+
+        function clearAllPosts() {
+            if (confirm('Are you sure you want to delete all posts? This action cannot be undone.')) {
+                blogPosts = [];
+                localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+                renderBlogPosts();
+                updateBlogStats();
+                updateAnalytics();
+                showToast('All posts deleted successfully', 'success');
+            }
+        }
+
+        function exportData() {
+            const data = {
+                posts: blogPosts,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'blogsphere-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Data exported successfully', 'success');
+        }
+
+        // Search Functionality
+        function handleSearch(query) {
+            const suggestions = document.getElementById('searchSuggestions');
+            
+            if (query.length === 0) {
+                suggestions.classList.add('hidden');
+                return;
+            }
+            
+            const filteredPosts = blogPosts.filter(post => 
+                post.title.toLowerCase().includes(query.toLowerCase()) ||
+                post.content.toLowerCase().includes(query.toLowerCase()) ||
+                post.category.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            if (filteredPosts.length > 0) {
+                suggestions.innerHTML = filteredPosts.slice(0, 5).map(post => `
+                    <div class="p-3 hover:bg-secondary cursor-pointer border-b border-custom last:border-b-0" onclick="selectSearchResult('${post.id}')">
+                        <div class="font-medium text-primary">${post.title}</div>
+                        <div class="text-sm text-secondary">${post.category}</div>
+                    </div>
+                `).join('');
+                suggestions.classList.remove('hidden');
+            } else {
+                suggestions.innerHTML = `
+                    <div class="p-3 text-center text-secondary">
+                        No results found for "${query}"
+                    </div>
+                `;
+                suggestions.classList.remove('hidden');
+            }
+        }
+
+        function selectSearchResult(postId) {
+            const post = blogPosts.find(p => p.id === postId);
+            if (post) {
+                showPage('feed');
+                // Scroll to post or highlight it
+                setTimeout(() => {
+                    const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                    if (postElement) {
+                        postElement.scrollIntoView({ behavior: 'smooth' });
+                        postElement.classList.add('ring-2', 'ring-blue-500');
+                        setTimeout(() => {
+                            postElement.classList.remove('ring-2', 'ring-blue-500');
+                        }, 2000);
+                    }
+                }, 100);
+            }
+            document.getElementById('searchSuggestions').classList.add('hidden');
+            document.getElementById('searchInput').value = '';
+        }
+
+        // Blog Post Management
+        function renderBlogPosts() {
+            const container = document.getElementById('blogContainer');
+            const emptyState = document.getElementById('emptyFeedState');
+            
+            if (blogPosts.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            container.innerHTML = blogPosts.map(post => `
+                <article class="blog-card bg-primary border border-custom rounded-lg overflow-hidden shadow-lg cursor-pointer" data-post-id="${post.id}" onclick="openBlogDetail('${post.id}')">
+                    ${post.thumbnail ? `
+                        <img src="${post.thumbnail}" alt="${post.title}" class="w-full h-48 object-cover">
+                    ` : `
+                        <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-white opacity-50"></i>
+                        </div>
+                    `}
+                    
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="category-pill bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${post.category}</span>
+                            <span class="text-sm text-secondary">${formatDate(post.createdAt)}</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-primary mb-3 hover:accent-color transition-colors">${post.title}</h3>
+                        <p class="text-secondary mb-4 line-clamp-3">${post.excerpt}</p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-secondary">
+                                <span><i class="fas fa-clock mr-1"></i>${post.readingTime} min read</span>
+                                <span><i class="fas fa-eye mr-1"></i>${post.views || 0} views</span>
+                            </div>
+                            <div class="flex items-center space-x-2" onclick="event.stopPropagation()">
+                                <button onclick="toggleBookmark('${post.id}', this)" data-bookmark-id="${post.id}" class="bookmark-animation p-2 rounded-lg hover:bg-secondary transition-colors" title="${isBookmarked(post.id) ? 'Remove from bookmarks' : 'Add to bookmarks'}">
+                                    <i class="${isBookmarked(post.id) ? 'fas fa-bookmark text-yellow-500' : 'far fa-bookmark text-gray-500'} text-lg"></i>
+                                </button>
+                                <button onclick="editPost('${post.id}')" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                                    <i class="fas fa-edit text-secondary"></i>
+                                </button>
+                                <button onclick="deletePost('${post.id}')" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                                    <i class="fas fa-trash text-red-500"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function sortPosts() {
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            switch (sortBy) {
+                case 'newest':
+                    blogPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+                case 'oldest':
+                    blogPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    break;
+                case 'title':
+                    blogPosts.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+            }
+            
+            renderBlogPosts();
+        }
+
+        function filterByCategory() {
+            const category = document.getElementById('categoryFilter').value;
+            const container = document.getElementById('blogContainer');
+            
+            if (category === '') {
+                renderBlogPosts();
+                return;
+            }
+            
+            const filteredPosts = blogPosts.filter(post => post.category === category);
+            
+            if (filteredPosts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <i class="fas fa-filter text-4xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-primary mb-2">No posts in this category</h3>
+                        <p class="text-secondary">Try selecting a different category or create a new post.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredPosts.map(post => `
+                <article class="blog-card bg-primary border border-custom rounded-lg overflow-hidden shadow-lg" data-post-id="${post.id}">
+                    ${post.thumbnail ? `
+                        <img src="${post.thumbnail}" alt="${post.title}" class="w-full h-48 object-cover">
+                    ` : `
+                        <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-white opacity-50"></i>
+                        </div>
+                    `}
+                    
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="category-pill bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${post.category}</span>
+                            <span class="text-sm text-secondary">${formatDate(post.createdAt)}</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-primary mb-3 hover:accent-color cursor-pointer transition-colors">${post.title}</h3>
+                        <p class="text-secondary mb-4 line-clamp-3">${post.excerpt}</p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-secondary">
+                                <span><i class="fas fa-clock mr-1"></i>${post.readingTime} min read</span>
+                                <span><i class="fas fa-eye mr-1"></i>0 views</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="editPost('${post.id}')" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                                    <i class="fas fa-edit text-secondary"></i>
+                                </button>
+                                <button onclick="deletePost('${post.id}')" class="p-2 rounded-lg hover:bg-secondary transition-colors">
+                                    <i class="fas fa-trash text-red-500"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                blogPosts = blogPosts.filter(post => post.id !== postId);
+                localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+                renderBlogPosts();
+                updateBlogStats();
+                updateAnalytics();
+                showToast('Post deleted successfully', 'success');
+            }
+        }
+
+        function editPost(postId) {
+            const post = blogPosts.find(p => p.id === postId);
+            if (post) {
+                showPage('write');
+                
+                // Populate editor with post data
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postCategory').value = post.category;
+                document.getElementById('contentEditor').innerHTML = post.content;
+                
+                if (post.thumbnail) {
+                    document.getElementById('thumbnailPreview').classList.remove('hidden');
+                    document.getElementById('thumbnailImage').src = post.thumbnail;
+                }
+                
+                // Store editing post ID
+                window.editingPostId = postId;
+                
+                updateWordCount();
+            }
+        }
+
+        // Editor Functions
+        function setupThumbnailUpload() {
+            const uploadArea = document.getElementById('thumbnailUpload');
+            const input = document.getElementById('thumbnailInput');
+            
+            uploadArea.addEventListener('click', () => input.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].type.startsWith('image/')) {
+                    handleThumbnailFile(files[0]);
+                }
+            });
+        }
+
+        function handleThumbnailUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleThumbnailFile(file);
+            }
+        }
+
+        function handleThumbnailFile(file) {
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                showToast('File size must be less than 5MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('thumbnailPreview').classList.remove('hidden');
+                document.getElementById('thumbnailImage').src = e.target.result;
+                window.currentThumbnail = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeThumbnail() {
+            document.getElementById('thumbnailPreview').classList.add('hidden');
+            document.getElementById('thumbnailInput').value = '';
+            window.currentThumbnail = null;
+        }
+
+        function formatText(command) {
+            const editor = document.getElementById('contentEditor');
+            editor.focus();
+            
+            switch (command) {
+                case 'bold':
+                    document.execCommand('bold');
+                    break;
+                case 'italic':
+                    document.execCommand('italic');
+                    break;
+                case 'underline':
+                    document.execCommand('underline');
+                    break;
+                case 'h1':
+                    document.execCommand('formatBlock', false, 'h1');
+                    break;
+                case 'h2':
+                    document.execCommand('formatBlock', false, 'h2');
+                    break;
+                case 'h3':
+                    document.execCommand('formatBlock', false, 'h3');
+                    break;
+                case 'ul':
+                    document.execCommand('insertUnorderedList');
+                    break;
+                case 'ol':
+                    document.execCommand('insertOrderedList');
+                    break;
+            }
+        }
+
+        function insertLink() {
+            const url = prompt('Enter URL:');
+            if (url) {
+                document.execCommand('createLink', false, url);
+            }
+        }
+
+        function updateWordCount() {
+            const content = document.getElementById('contentEditor').textContent || '';
+            const words = content.trim().split(/\s+/).filter(word => word.length > 0).length;
+            const readingTime = Math.max(1, Math.ceil(words / 200)); // 200 words per minute
+            
+            document.getElementById('wordCount').textContent = `${words} words`;
+            document.getElementById('readingTime').textContent = `${readingTime} min read`;
+        }
+
+        function previewPost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('contentEditor').innerHTML;
+            const category = document.getElementById('postCategory').value;
+            
+            if (!title.trim()) {
+                showToast('Please enter a title', 'error');
+                return;
+            }
+            
+            const previewContent = document.getElementById('previewContent');
+            previewContent.innerHTML = `
+                <div class="mb-6">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${category || 'Uncategorized'}</span>
+                </div>
+                <h1 class="text-4xl font-bold font-display text-primary mb-6">${title}</h1>
+                ${window.currentThumbnail ? `<img src="${window.currentThumbnail}" alt="${title}" class="w-full h-64 object-cover rounded-lg mb-6">` : ''}
+                <div class="prose max-w-none text-primary">${content}</div>
+            `;
+            
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        function saveDraft() {
+            // In a real app, this would save to a drafts collection
+            showToast('Draft saved successfully', 'success');
+        }
+
+        function publishPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('contentEditor').innerHTML.trim();
+            const category = document.getElementById('postCategory').value;
+            
+            if (!title) {
+                showToast('Please enter a title', 'error');
+                return;
+            }
+            
+            if (!content || content === '<br>') {
+                showToast('Please enter some content', 'error');
+                return;
+            }
+            
+            if (!category) {
+                showToast('Please select a category', 'error');
+                return;
+            }
+            
+            const words = content.replace(/<[^>]*>/g, '').trim().split(/\s+/).filter(word => word.length > 0).length;
+            const readingTime = Math.max(1, Math.ceil(words / 200));
+            const excerpt = content.replace(/<[^>]*>/g, '').substring(0, 150) + '...';
+            
+            const post = {
+                id: window.editingPostId || Date.now().toString(),
+                title,
+                content,
+                category,
+                thumbnail: window.currentThumbnail || null,
+                excerpt,
+                readingTime,
+                views: window.editingPostId ? blogPosts.find(p => p.id === window.editingPostId).views || 0 : 0,
+                createdAt: window.editingPostId ? blogPosts.find(p => p.id === window.editingPostId).createdAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (window.editingPostId) {
+                // Update existing post
+                const index = blogPosts.findIndex(p => p.id === window.editingPostId);
+                blogPosts[index] = post;
+                window.editingPostId = null;
+                showToast('Post updated successfully', 'success');
+            } else {
+                // Create new post
+                blogPosts.unshift(post);
+                showToast('Post published successfully', 'success');
+            }
+            
+            localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+            
+            // Clear editor
+            document.getElementById('postTitle').value = '';
+            document.getElementById('contentEditor').innerHTML = '';
+            document.getElementById('postCategory').value = '';
+            removeThumbnail();
+            updateWordCount();
+            
+            // Update UI
+            renderBlogPosts();
+            updateBlogStats();
+            updateAnalytics();
+            updateHomePage();
+            
+            // Show success modal
+            window.lastCreatedPostId = post.id;
+            showSuccessModal(window.editingPostId ? 'updated' : 'created');
+        }
+
+        // Newsletter Functions
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletterEmail').value.trim();
+            
+            if (!email) {
+                showToast('Please enter your email address', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showToast('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Simulate newsletter subscription
+            showToast('Successfully subscribed to newsletter!', 'success');
+            document.getElementById('newsletterEmail').value = '';
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Home Page Functions
+        function updateHomePage() {
+            updateTrendingPosts();
+            updateRecommendedPosts();
+            toggleEmptyState();
+        }
+        
+        function updateTrendingPosts() {
+            const trendingContainer = document.getElementById('trendingPosts');
+            // Sort by views (descending) and get top 3
+            const trendingPosts = [...blogPosts]
+                .sort((a, b) => (b.views || 0) - (a.views || 0))
+                .slice(0, 3);
+            
+            if (trendingPosts.length === 0) {
+                trendingContainer.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-fire text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-secondary">No trending posts yet. Create your first post!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            trendingContainer.innerHTML = trendingPosts.map(post => createPostCard(post, true)).join('');
+        }
+        
+        function updateRecommendedPosts() {
+            const recommendedContainer = document.getElementById('recommendedPosts');
+            // Get random 3 posts for recommendations
+            const shuffledPosts = [...blogPosts].sort(() => Math.random() - 0.5);
+            const recommendedPosts = shuffledPosts.slice(0, 3);
+            
+            if (recommendedPosts.length === 0) {
+                recommendedContainer.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-star text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-secondary">No recommendations yet. Create your first post!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            recommendedContainer.innerHTML = recommendedPosts.map(post => createPostCard(post, false)).join('');
+        }
+        
+        function createPostCard(post, isTrending = false) {
+            return `
+                <article class="blog-card bg-primary border border-custom rounded-lg overflow-hidden shadow-lg cursor-pointer" data-post-id="${post.id}" onclick="openBlogDetail('${post.id}')">
+                    ${post.thumbnail ? `
+                        <img src="${post.thumbnail}" alt="${post.title}" class="w-full h-48 object-cover">
+                    ` : `
+                        <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-white opacity-50"></i>
+                        </div>
+                    `}
+                    
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="category-pill bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${post.category}</span>
+                            ${isTrending ? '<span class="text-orange-500 text-sm font-medium">🔥 Trending</span>' : ''}
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-secondary">${formatDate(post.createdAt)}</span>
+                                <button onclick="event.stopPropagation(); toggleBookmark('${post.id}', this)" data-bookmark-id="${post.id}" class="bookmark-animation p-1 rounded hover:bg-secondary transition-colors" title="${isBookmarked(post.id) ? 'Remove from bookmarks' : 'Add to bookmarks'}">
+                                    <i class="${isBookmarked(post.id) ? 'fas fa-bookmark text-yellow-500' : 'far fa-bookmark text-gray-500'} text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-primary mb-3 hover:accent-color transition-colors">${post.title}</h3>
+                        <p class="text-secondary mb-4 line-clamp-3">${post.excerpt}</p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-secondary">
+                                <span><i class="fas fa-clock mr-1"></i>${post.readingTime} min read</span>
+                                <span><i class="fas fa-eye mr-1"></i>${post.views || 0} views</span>
+                            </div>
+                            <span class="text-blue-600 font-medium text-sm">
+                                Read More →
+                            </span>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+        
+        function viewPost(postId) {
+            showPage('feed');
+            setTimeout(() => {
+                const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                if (postElement) {
+                    postElement.scrollIntoView({ behavior: 'smooth' });
+                    postElement.classList.add('ring-2', 'ring-blue-500');
+                    setTimeout(() => {
+                        postElement.classList.remove('ring-2', 'ring-blue-500');
+                    }, 2000);
+                }
+            }, 100);
+        }
+
+        // Blog Detail Functions
+        function openBlogDetail(postId) {
+            const post = blogPosts.find(p => p.id === postId);
+            if (!post) return;
+            
+            // Increment view count
+            post.views = (post.views || 0) + 1;
+            localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+            
+            currentBlogPost = post;
+            
+            const blogDetailContent = document.getElementById('blogDetailContent');
+            blogDetailContent.innerHTML = `
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${post.category}</span>
+                        <div class="flex items-center space-x-4 text-sm text-secondary">
+                            <span><i class="fas fa-calendar mr-1"></i>${formatDate(post.createdAt)}</span>
+                            <span><i class="fas fa-clock mr-1"></i>${post.readingTime} min read</span>
+                            <span><i class="fas fa-eye mr-1"></i>${post.views} views</span>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="text-4xl font-bold font-display text-primary mb-6">${post.title}</h1>
+                ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" class="w-full h-64 object-cover rounded-lg mb-6">` : ''}
+                <div class="prose max-w-none text-primary">${post.content}</div>
+                
+                <!-- Comments Section -->
+                <div class="mt-12 pt-8 border-t border-custom">
+                    <h3 class="text-2xl font-bold text-primary mb-6">💬 Comments</h3>
+                    
+                    <!-- Add Comment Form -->
+                    <div class="bg-secondary rounded-lg p-6 mb-6">
+                        <h4 class="font-semibold text-primary mb-4">Leave a Comment</h4>
+                        <form onsubmit="addComment(event, '${post.id}')">
+                            <div class="space-y-4">
+                                <div>
+                                    <input type="text" id="commentName" placeholder="Your name" required 
+                                           class="w-full border border-custom rounded-lg px-4 py-2 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <textarea id="commentText" placeholder="Write your comment..." rows="3" required
+                                              class="w-full border border-custom rounded-lg px-4 py-2 bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                                </div>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                                    <i class="fas fa-paper-plane mr-2"></i>Post Comment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Comments List -->
+                    <div id="commentsList-${post.id}" class="space-y-4">
+                        <!-- Comments will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-custom">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-secondary">
+                            <p>Published on ${formatDate(post.createdAt)}</p>
+                            ${post.updatedAt !== post.createdAt ? `<p>Last updated on ${formatDate(post.updatedAt)}</p>` : ''}
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editPost('${post.id}'); closeBlogDetail();" class="text-blue-600 hover:text-blue-700 text-sm">
+                                <i class="fas fa-edit mr-1"></i>Edit
+                            </button>
+                            <button onclick="deletePost('${post.id}'); closeBlogDetail();" class="text-red-600 hover:text-red-700 text-sm">
+                                <i class="fas fa-trash mr-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('blogDetailModal').classList.remove('hidden');
+            
+            // Update bookmark button state
+            updateBlogDetailBookmark();
+            
+            // Load comments for this post
+            loadComments(post.id);
+            
+            // Update UI to reflect new view count
+            updateHomePage();
+            renderBlogPosts();
+        }
+
+        // Comment System
+        function addComment(event, postId) {
+            event.preventDefault();
+            
+            const name = document.getElementById('commentName').value.trim();
+            const text = document.getElementById('commentText').value.trim();
+            
+            if (!name || !text) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+            
+            const comment = {
+                id: Date.now().toString(),
+                postId: postId,
+                name: name,
+                text: text,
+                createdAt: new Date().toISOString()
+            };
+            
+            if (!comments[postId]) {
+                comments[postId] = [];
+            }
+            
+            comments[postId].unshift(comment);
+            localStorage.setItem('comments', JSON.stringify(comments));
+            
+            // Clear form
+            document.getElementById('commentName').value = '';
+            document.getElementById('commentText').value = '';
+            
+            // Reload comments
+            loadComments(postId);
+            
+            showToast('Comment added successfully!', 'success');
+        }
+
+        function loadComments(postId) {
+            const commentsList = document.getElementById(`commentsList-${postId}`);
+            const postComments = comments[postId] || [];
+            
+            if (postComments.length === 0) {
+                commentsList.innerHTML = `
+                    <div class="text-center py-8 text-secondary">
+                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                        <p>No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            commentsList.innerHTML = postComments.map(comment => `
+                <div class="bg-secondary rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm font-semibold">${comment.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <span class="font-semibold text-primary">${comment.name}</span>
+                        </div>
+                        <span class="text-sm text-secondary">${formatDate(comment.createdAt)}</span>
+                    </div>
+                    <p class="text-primary">${comment.text}</p>
+                </div>
+            `).join('');
+        }
+        
+        function closeBlogDetail() {
+            document.getElementById('blogDetailModal').classList.add('hidden');
+            document.getElementById('shareMenu').classList.add('hidden');
+            currentBlogPost = null;
+        }
+        
+        function toggleShareMenu() {
+            const shareMenu = document.getElementById('shareMenu');
+            shareMenu.classList.toggle('hidden');
+        }
+        
+        // Social Media Sharing Functions
+        function shareToFacebook() {
+            if (!currentBlogPost) return;
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(currentBlogPost.title);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToTwitter() {
+            if (!currentBlogPost) return;
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(`${currentBlogPost.title} - ${currentBlogPost.excerpt.substring(0, 100)}...`);
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToLinkedIn() {
+            if (!currentBlogPost) return;
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(currentBlogPost.title);
+            const summary = encodeURIComponent(currentBlogPost.excerpt);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToWhatsApp() {
+            if (!currentBlogPost) return;
+            const text = encodeURIComponent(`${currentBlogPost.title}\n\n${currentBlogPost.excerpt}\n\nRead more: ${window.location.href}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+        
+        function shareToInstagram() {
+            if (!currentBlogPost) return;
+            // Instagram doesn't support direct URL sharing, so we copy the link and show instructions
+            copyLink();
+            showToast('Link copied! Open Instagram and paste the link in your story or post.', 'info');
+        }
+        
+        function copyLink() {
+            if (!currentBlogPost) return;
+            
+            // Create a temporary input element to copy the URL
+            const tempInput = document.createElement('input');
+            tempInput.value = window.location.href + '#post-' + currentBlogPost.id;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            showToast('Link copied to clipboard!', 'success');
+        }
+        
+        function toggleEmptyState() {
+            const emptyState = document.getElementById('emptyHomeState');
+            const trendingSection = document.querySelector('#trendingPosts').closest('section');
+            
+            if (blogPosts.length === 0) {
+                emptyState.classList.remove('hidden');
+                trendingSection.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                trendingSection.classList.remove('hidden');
+            }
+        }
+
+        // Success Modal Functions
+        function showSuccessModal(action = 'created') {
+            const message = document.getElementById('successMessage');
+            message.textContent = action === 'updated' ? 
+                'Your blog post has been updated successfully!' : 
+                'Yeah! You created this blog successfully!';
+            
+            const modal = document.getElementById('successModal');
+            const modalContent = modal.querySelector('.success-modal');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.add('show');
+            }, 10);
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const modalContent = modal.querySelector('.success-modal');
+            
+            modalContent.classList.remove('show');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function viewCreatedPost() {
+            closeSuccessModal();
+            showPage('feed');
+            
+            // Highlight the created/updated post
+            if (window.lastCreatedPostId) {
+                setTimeout(() => {
+                    const postElement = document.querySelector(`[data-post-id="${window.lastCreatedPostId}"]`);
+                    if (postElement) {
+                        postElement.scrollIntoView({ behavior: 'smooth' });
+                        postElement.classList.add('ring-2', 'ring-green-500');
+                        setTimeout(() => {
+                            postElement.classList.remove('ring-2', 'ring-green-500');
+                        }, 3000);
+                    }
+                }, 100);
+            }
+        }
+
+        // Authentication
+        function showAuthModal(mode) {
+            authMode = mode;
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('authTitle');
+            const nameField = document.getElementById('nameField');
+            const authButtonText = document.getElementById('authButtonText');
+            const googleButtonText = document.getElementById('googleButtonText');
+            const authSwitchText = document.getElementById('authSwitchText');
+            const authSwitchButton = document.getElementById('authSwitchButton');
+            
+            if (mode === 'signin') {
+                title.textContent = 'Sign In';
+                nameField.classList.add('hidden');
+                authButtonText.textContent = 'Sign In';
+                googleButtonText.textContent = 'Sign in with Google';
+                authSwitchText.textContent = "Don't have an account?";
+                authSwitchButton.textContent = 'Sign up';
+            } else {
+                title.textContent = 'Sign Up';
+                nameField.classList.remove('hidden');
+                authButtonText.textContent = 'Sign Up';
+                googleButtonText.textContent = 'Sign up with Google';
+                authSwitchText.textContent = 'Already have an account?';
+                authSwitchButton.textContent = 'Sign in';
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authForm').reset();
+        }
+
+        function switchAuthMode() {
+            authMode = authMode === 'signin' ? 'signup' : 'signin';
+            showAuthModal(authMode);
+        }
+
+        function handleAuth(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value;
+            
+            // Simulate authentication
+            if (authMode === 'signup') {
+                if (!fullName.trim()) {
+                    showToast('Please enter your full name', 'error');
+                    return;
+                }
+                currentUser = { email, name: fullName };
+                showToast('Account created successfully!', 'success');
+            } else {
+                currentUser = { email, name: 'User' };
+                showToast('Signed in successfully!', 'success');
+            }
+            
+            isAuthenticated = true;
+            updateUserUI();
+            closeAuthModal();
+        }
+
+        function signInWithGoogle() {
+            // Simulate Google sign-in
+            currentUser = { email: 'user@gmail.com', name: 'Google User' };
+            isAuthenticated = true;
+            updateUserUI();
+            closeAuthModal();
+            showToast('Signed in with Google successfully!', 'success');
+        }
+
+        function updateUserUI() {
+            const userMenu = document.getElementById('userMenu');
+            if (isAuthenticated && currentUser) {
+                userMenu.innerHTML = `
+                    <div class="p-4 border-b border-custom">
+                        <p class="font-medium text-primary">${currentUser.name}</p>
+                        <p class="text-sm text-secondary">${currentUser.email}</p>
+                    </div>
+                    <div class="py-2">
+                        <button onclick="signOut()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-secondary transition-colors">
+                            Sign Out
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function signOut() {
+            isAuthenticated = false;
+            currentUser = null;
+            
+            const userMenu = document.getElementById('userMenu');
+            userMenu.innerHTML = `
+                <div class="p-4 border-b border-custom">
+                    <p class="font-medium text-primary">Guest User</p>
+                    <p class="text-sm text-secondary">Not signed in</p>
+                </div>
+                <div class="py-2">
+                    <button onclick="showAuthModal('signin')" class="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors">
+                        Sign In
+                    </button>
+                    <button onclick="showAuthModal('signup')" class="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors">
+                        Sign Up
+                    </button>
+                </div>
+            `;
+            
+            showToast('Signed out successfully', 'success');
+        }
+
+        // Analytics
+        function updateAnalytics() {
+            document.getElementById('analyticsPostCount').textContent = blogPosts.length;
+            
+            // Calculate total views
+            const totalViews = blogPosts.reduce((sum, post) => sum + (post.views || 0), 0);
+            document.getElementById('analyticsTotalViews').textContent = totalViews;
+            
+            const recentPostsList = document.getElementById('recentPostsList');
+            
+            if (blogPosts.length === 0) {
+                recentPostsList.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-chart-bar text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-secondary">No posts to analyze yet. Create your first post to see analytics.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recentPosts = blogPosts.slice(0, 5);
+            recentPostsList.innerHTML = `
+                <div class="space-y-4">
+                    ${recentPosts.map(post => `
+                        <div class="flex items-center justify-between p-4 bg-secondary rounded-lg">
+                            <div class="flex-1">
+                                <h4 class="font-medium text-primary">${post.title}</h4>
+                                <p class="text-sm text-secondary">${post.category} • ${formatDate(post.createdAt)}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-secondary">${post.views || 0} views</p>
+                                <p class="text-sm text-secondary">${post.readingTime} min read</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Utility Functions
+        function updateBlogStats() {
+            document.getElementById('totalPosts').textContent = blogPosts.length;
+            
+            // Update category counts
+            const categoryCounts = blogPosts.reduce((acc, post) => {
+                acc[post.category] = (acc[post.category] || 0) + 1;
+                return acc;
+            }, {});
+            
+            document.getElementById('techCount').textContent = categoryCounts.technology || 0;
+            document.getElementById('designCount').textContent = categoryCounts.design || 0;
+            document.getElementById('lifestyleCount').textContent = categoryCounts.lifestyle || 0;
+            document.getElementById('businessCount').textContent = categoryCounts.business || 0;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return 'Today';
+            if (diffDays === 2) return 'Yesterday';
+            if (diffDays <= 7) return `${diffDays} days ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                'bg-blue-500'
+            }`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Hover Scroll Indicator
+        function setupHoverScrollIndicator() {
+            const nav = document.querySelector('nav');
+            const indicator = document.getElementById('hoverScrollIndicator');
+            
+            nav.addEventListener('mouseenter', function() {
+                indicator.style.opacity = '1';
+            });
+            
+            nav.addEventListener('mouseleave', function() {
+                indicator.style.opacity = '0';
+                indicator.style.width = '0%';
+            });
+            
+            nav.addEventListener('mousemove', function(e) {
+                const navRect = nav.getBoundingClientRect();
+                const mouseX = e.clientX - navRect.left;
+                const navWidth = navRect.width;
+                const percentage = (mouseX / navWidth) * 100;
+                
+                // Clamp percentage between 0 and 100
+                const clampedPercentage = Math.max(0, Math.min(100, percentage));
+                
+                indicator.style.width = clampedPercentage + '%';
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdowns = [
+                { id: 'typographyMenu', buttonSelector: 'button[onclick="toggleTypographyMenu()"]' },
+                { id: 'accessibilityMenu', buttonSelector: 'button[onclick="toggleAccessibilityMenu()"]' },
+                { id: 'userMenu', buttonSelector: 'button[onclick="toggleUserMenu()"]' },
+                { id: 'searchSuggestions', buttonSelector: '#searchInput' },
+                { id: 'adminPanel', buttonSelector: '#logoButton' },
+                { id: 'mobileMenu', buttonSelector: 'button[onclick="toggleMobileMenu()"]' }
+            ];
+            
+            dropdowns.forEach(dropdown => {
+                const element = document.getElementById(dropdown.id);
+                const button = document.querySelector(dropdown.buttonSelector);
+                
+                if (element && button && !element.contains(event.target) && !button.contains(event.target)) {
+                    if (dropdown.id === 'adminPanel') {
+                        element.classList.remove('open');
+                    } else {
+                        element.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97640ad3211428cd',t:'MTc1NjM4NjU1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
